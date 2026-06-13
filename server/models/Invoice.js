@@ -87,6 +87,40 @@ const invoiceSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+
+  // ── Recurring billing ────────────────────────────────────────────────────
+  /** True on the template invoice; false on auto-generated copies. */
+  isRecurring: {
+    type: Boolean,
+    default: false
+  },
+  recurringInterval: {
+    type: String,
+    enum: ['weekly', 'monthly', 'quarterly'],
+    default: 'monthly'
+  },
+  /**
+   * Only meaningful when isRecurring=true.
+   * 'active'   — cron will generate copies each cycle
+   * 'paused'   — cron skips this template until resumed
+   * 'cancelled' — cron permanently ignores this template
+   */
+  recurringStatus: {
+    type: String,
+    enum: ['active', 'paused', 'cancelled'],
+    default: 'active'
+  },
+  /** The date the cron job should next generate a copy of this invoice. */
+  nextBillingDate: {
+    type: Date,
+    default: null
+  },
+  /** On auto-generated copies: points back to the recurring template. */
+  parentInvoiceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Invoice',
+    default: null
   }
 }, {
   timestamps: true

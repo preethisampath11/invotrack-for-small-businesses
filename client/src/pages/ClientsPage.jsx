@@ -14,6 +14,7 @@ const ClientsPage = () => {
   const { refreshTriggers } = useSocket();
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState('name_asc');
   const [showModal, setShowModal] = useState(false);
   const [editClient, setEditClient] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: { street: '', city: '', state: '', zip: '', country: '' } });
@@ -34,7 +35,19 @@ const ClientsPage = () => {
 
   useEffect(() => { fetchClients(); }, [refreshTriggers.clients, refreshTriggers.settings]);
 
-  const filtered = clients.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.email.toLowerCase().includes(search.toLowerCase()));
+  const filtered = clients
+    .filter(c => 
+      c.name.toLowerCase().includes(search.toLowerCase()) || 
+      c.email.toLowerCase().includes(search.toLowerCase()) ||
+      (c.phone && c.phone.includes(search))
+    )
+    .sort((a, b) => {
+      if (sortBy === 'purchases_desc') return (b.totalBilled || 0) - (a.totalBilled || 0);
+      if (sortBy === 'outstanding_desc') return (b.outstanding || 0) - (a.outstanding || 0);
+      if (sortBy === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortBy === 'name_desc') return b.name.localeCompare(a.name);
+      return a.name.localeCompare(b.name);
+    });
 
   const openCreate = () => { setEditClient(null); setForm({ name: '', email: '', phone: '', address: { street: '', city: '', state: '', zip: '', country: '' } }); setShowModal(true); };
   const openEdit = (c) => { setEditClient(c); setForm({ name: c.name, email: c.email, phone: c.phone || '', address: c.address || {} }); setShowModal(true); };
@@ -58,31 +71,32 @@ const ClientsPage = () => {
 
   return (
     <div className="animate-fade-in">
-      <div style={{ marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>Clients</h1>
-          <p style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '14px', marginTop: '4px' }}>{clients.length} active clients</p>
-        </div>
-      </div>
       {isAdmin && createPortal(
         <div className="animate-fade-in" style={{ position: 'fixed', bottom: '32px', right: '32px', zIndex: 40, animationDelay: '0.1s' }}>
-          <button className="btn-primary" onClick={openCreate} style={{ padding: '14px 24px', fontSize: '15px', borderRadius: '100px', boxShadow: '0 8px 32px rgba(99,102,241,0.4)' }}>
+          <button className="btn-primary" onClick={openCreate} style={{ padding: '14px 24px', fontSize: '15px', borderRadius: '100px', boxShadow: '0 8px 32px rgba(58,74,83,0.4)' }}>
             <Plus size={20} /> Add Client
           </button>
         </div>,
         document.body
       )}
 
-      <div className="stat-card" style={{ padding: '16px 20px', marginBottom: '16px' }}>
-        <div style={{ position: 'relative' }}>
+      <div className="stat-card" style={{ padding: '16px 20px', marginBottom: '16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1 }}>
           <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: theme === 'dark' ? '#cbd5e1' : '#94a3b8' }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="input-field" style={{ paddingLeft: '36px' }} />
         </div>
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="input-field" style={{ width: '200px' }}>
+          <option value="name_asc">Name (A to Z)</option>
+          <option value="name_desc">Name (Z to A)</option>
+          <option value="purchases_desc">Highest Purchases</option>
+          <option value="outstanding_desc">Highest Outstanding</option>
+          <option value="newest">Recently Added</option>
+        </select>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
         {filtered.map((client, idx) => (
-          <motion.div key={client._id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }} className="stat-card" style={{ padding: '20px' }}>
+          <motion.div key={client._id} onClick={() => isAdmin && openEdit(client)} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }} className="stat-card" style={{ padding: '20px', cursor: isAdmin ? 'pointer' : 'default' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: theme === 'dark' ? 'rgba(34,197,94,0.1)' : '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#16a34a', fontSize: '16px' }}>
@@ -95,8 +109,8 @@ const ClientsPage = () => {
               </div>
               {isAdmin && (
                 <div style={{ display: 'flex', gap: '4px' }}>
-                  <button onClick={() => openEdit(client)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#cbd5e1' : '#64748b', padding: '4px' }}><Edit size={14} /></button>
-                  <button onClick={() => handleDelete(client._id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#f87171' : '#ef4444', padding: '4px' }}><Trash2 size={14} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); openEdit(client); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#cbd5e1' : '#64748b', padding: '4px' }}><Edit size={14} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); handleDelete(client._id); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#f87171' : '#ef4444', padding: '4px' }}><Trash2 size={14} /></button>
                 </div>
               )}
             </div>

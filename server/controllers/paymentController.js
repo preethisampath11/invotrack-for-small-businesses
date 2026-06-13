@@ -2,7 +2,7 @@ import Payment from '../models/Payment.js';
 import Invoice from '../models/Invoice.js';
 import Activity from '../models/Activity.js';
 
-export const getPayments = async (req, res) => {
+export const getPayments = async (req, res, next) => {
   try {
     const filter = { companyId: req.user.companyId };
     if (req.query.invoiceId) filter.invoiceId = req.query.invoiceId;
@@ -14,11 +14,11 @@ export const getPayments = async (req, res) => {
 
     return res.json({ payments });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error.' });
+    next(error);
   }
 };
 
-export const createPayment = async (req, res) => {
+export const createPayment = async (req, res, next) => {
   try {
     const { invoiceId, amount, paymentDate, paymentMethod, referenceNumber, notes } = req.body;
 
@@ -65,12 +65,11 @@ export const createPayment = async (req, res) => {
 
     return res.status(201).json({ payment: populated, invoice });
   } catch (error) {
-    console.error('Create payment error:', error);
-    return res.status(500).json({ message: 'Server error.' });
+    next(error);
   }
 };
 
-export const deletePayment = async (req, res) => {
+export const deletePayment = async (req, res, next) => {
   try {
     const payment = await Payment.findOne({ _id: req.params.id, companyId: req.user.companyId });
     if (!payment) return res.status(404).json({ message: 'Payment not found.' });
@@ -102,6 +101,6 @@ export const deletePayment = async (req, res) => {
 
     return res.json({ message: 'Payment deleted.', invoice });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error.' });
+    next(error);
   }
 };

@@ -25,13 +25,26 @@ export const AuthProvider = ({ children }) => {
 
   api.interceptors.response.use(
     (response) => response,
-    (error) => {
-      // Only auto-logout on 401 (invalid/expired token).
-      // 403 means the user IS authenticated but lacks permissions
-      // (e.g. pending approval, deactivated) — do NOT logout here.
-      if (error.response?.status === 401) {
-        logout();
+    async (error) => {
+      const originalRequest = error.config;
+
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          const res = await axios.post('/api/auth/refresh');
+          const newToken = res.data.token;
+          
+          localStorage.setItem('invotrack_token', newToken);
+          setToken(newToken);
+          
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return api(originalRequest);
+        } catch (refreshError) {
+          logout();
+          return Promise.reject(refreshError);
+        }
       }
+
       return Promise.reject(error);
     }
   );
@@ -80,7 +93,8 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try { await axios.post('/api/auth/logout'); } catch (err) { console.error('Logout error', err); }
     localStorage.removeItem('invotrack_token');
     setToken(null);
     setUser(null);

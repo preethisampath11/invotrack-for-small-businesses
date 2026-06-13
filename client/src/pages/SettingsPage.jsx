@@ -158,11 +158,6 @@ const SettingsPage = () => {
 
   return (
     <div className="animate-fade-in">
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>Settings</h1>
-        <p style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '14px', marginTop: '4px' }}>Manage your preferences and security</p>
-      </div>
-
       <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
         {/* Settings Sidebar Tabs */}
         <div style={{ width: '220px', display: 'flex', flexDirection: 'column', gap: '4px' }}>

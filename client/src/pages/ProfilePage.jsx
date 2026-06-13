@@ -9,6 +9,7 @@ const ProfilePage = () => {
   const { theme } = useTheme();
   const [form, setForm] = useState({ name: user?.name || '', currentPassword: '', newPassword: '' });
   const [loading, setLoading] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,11 +43,6 @@ const ProfilePage = () => {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '600px' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>My Profile</h1>
-        <p style={{ color: theme === 'dark' ? '#94a3b8' : '#64748b', fontSize: '14px', marginTop: '4px' }}>Manage your personal details</p>
-      </div>
-
       <div className="stat-card" style={{ padding: '24px', marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '24px' }}>
           <div style={{
@@ -55,7 +51,7 @@ const ProfilePage = () => {
             fontWeight: 800, color: theme === 'dark' ? '#4ade80' : '#16a34a', fontSize: '28px', overflow: 'hidden',
             border: `3px solid ${theme === 'dark' ? '#334155' : '#dcfce7'}`
           }}>
-            {user?.avatar ? <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user?.name?.charAt(0)?.toUpperCase()}
+            {user?.avatar && !imgError ? <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={() => setImgError(true)} /> : user?.name?.charAt(0)?.toUpperCase()}
           </div>
           <div>
             <h2 style={{ fontSize: '20px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>{user?.name}</h2>
@@ -83,21 +79,17 @@ const ProfilePage = () => {
             <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required className="input-field" />
           </div>
 
-          {user?.passwordHash !== null && !user?.googleId && (
-            <>
-              <div style={{ borderTop: `1px solid ${theme === 'dark' ? '#334155' : '#f1f5f9'}`, paddingTop: '16px', marginTop: '4px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#475569', marginBottom: '12px' }}>Change Password</h4>
-              </div>
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#475569', marginBottom: '6px', display: 'block' }}>Current Password</label>
-                <input type="password" value={form.currentPassword} onChange={e => setForm({ ...form, currentPassword: e.target.value })} className="input-field" placeholder="Enter current password" />
-              </div>
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#475569', marginBottom: '6px', display: 'block' }}>New Password</label>
-                <input type="password" value={form.newPassword} onChange={e => setForm({ ...form, newPassword: e.target.value })} className="input-field" placeholder="Enter new password" minLength={6} />
-              </div>
-            </>
-          )}
+          <div style={{ borderTop: `1px solid ${theme === 'dark' ? '#334155' : '#f1f5f9'}`, paddingTop: '16px', marginTop: '4px' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#475569', marginBottom: '12px' }}>Change Password</h4>
+          </div>
+          <div>
+            <label style={{ fontSize: '13px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#475569', marginBottom: '6px', display: 'block' }}>Current Password</label>
+            <input type="password" value={form.currentPassword} onChange={e => setForm({ ...form, currentPassword: e.target.value })} className="input-field" placeholder="Enter current password" />
+          </div>
+          <div>
+            <label style={{ fontSize: '13px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#475569', marginBottom: '6px', display: 'block' }}>New Password</label>
+            <input type="password" value={form.newPassword} onChange={e => setForm({ ...form, newPassword: e.target.value })} className="input-field" placeholder="Enter new password" minLength={6} />
+          </div>
 
           <button type="submit" className="btn-primary" disabled={loading} style={{ alignSelf: 'flex-end' }}>
             <Save size={16} /> {loading ? 'Saving...' : 'Save Changes'}

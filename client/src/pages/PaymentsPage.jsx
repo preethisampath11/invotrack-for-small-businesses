@@ -7,6 +7,33 @@ import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useTheme } from '../context/ThemeContext';
 
+const mockupCards = [
+  {
+    type: 'Visa Card',
+    bank: 'VISA',
+    number: '•••• •••• •••• 0865',
+    holder: 'Card Holder',
+    expires: '11/31',
+    bg: '#024d7a'
+  },
+  {
+    type: 'Credit Card',
+    bank: 'SBI',
+    number: '•••• •••• •••• 0865',
+    holder: 'Card Holder',
+    expires: '11/31',
+    bg: '#334155'
+  },
+  {
+    type: 'Debit Card',
+    bank: 'HDFC',
+    number: '•••• •••• •••• 0865',
+    holder: 'Card Holder',
+    expires: '11/31',
+    bg: 'linear-gradient(to right, #db0f61, #9612ba)'
+  }
+];
+
 const PaymentsPage = () => {
   const { api, user } = useAuth();
   const isAdmin = user?.role === 'admin';
@@ -52,22 +79,50 @@ const PaymentsPage = () => {
 
   return (
     <div className="animate-fade-in">
-      <div style={{ marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>Payments</h1>
-          <p style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '14px', marginTop: '4px' }}>{payments.length} payments recorded</p>
-        </div>
-      </div>
       {isAdmin && createPortal(
         <div className="animate-fade-in" style={{ position: 'fixed', bottom: '32px', right: '32px', zIndex: 40, animationDelay: '0.1s' }}>
-          <button className="btn-primary" onClick={() => setShowModal(true)} style={{ padding: '14px 24px', fontSize: '15px', borderRadius: '100px', boxShadow: '0 8px 32px rgba(99,102,241,0.4)' }}>
+          <button className="btn-primary" onClick={() => setShowModal(true)} style={{ padding: '14px 24px', fontSize: '15px', borderRadius: '100px', boxShadow: '0 8px 32px rgba(58,74,83,0.4)' }}>
             <Plus size={20} /> Record Payment
           </button>
         </div>,
         document.body
       )}
 
-      <div className="table-container">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '32px' }}>
+        {mockupCards.map((card, i) => (
+          <div key={i} style={{
+            minHeight: '180px',
+            background: card.bg,
+            borderRadius: '16px',
+            padding: '24px',
+            color: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '13px', opacity: 0.9 }}>{card.type}</span>
+              <span style={{ fontSize: '18px', fontWeight: 800 }}>{card.bank}</span>
+            </div>
+            <div style={{ fontSize: '18px', letterSpacing: '2px', fontWeight: 600 }}>
+              {card.number}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <div>
+                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '2px' }}>Cardholder</div>
+                <div style={{ fontSize: '13px', fontWeight: 600 }}>{user?.name?.toUpperCase() || card.holder.toUpperCase()}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '2px' }}>Expires</div>
+                <div style={{ fontSize: '13px', fontWeight: 600 }}>{card.expires}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="table-container" style={{ overflowX: 'auto' }}>
         <table>
           <thead><tr><th>Date</th><th>Invoice</th><th>Amount</th><th>Method</th><th>Reference</th><th>Recorded By</th><th></th></tr></thead>
           <tbody>

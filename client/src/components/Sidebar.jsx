@@ -35,7 +35,7 @@ const Sidebar = () => {
       height: 'calc(100vh - 24px)',
       background: theme === 'dark' ? '#1e293b' : 'var(--bg-color, #ffffff)',
       borderRadius: '20px',
-      boxShadow: theme === 'dark' ? '0 8px 32px rgba(0,0,0,0.3)' : '0 8px 32px rgba(99,102,241,0.15)',
+      boxShadow: theme === 'dark' ? '0 8px 32px rgba(0,0,0,0.3)' : '0 8px 32px rgba(58,74,83,0.15)',
       padding: '24px 16px',
       display: 'flex',
       flexDirection: 'column',
@@ -47,10 +47,10 @@ const Sidebar = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '32px', paddingLeft: '8px' }}>
         <div style={{
           width: '36px', height: '36px', borderRadius: '12px',
-          background: 'linear-gradient(135deg, #818cf8, #4f46e5)',
+          background: 'linear-gradient(135deg, #948f80, #2c3940)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: 'white', fontWeight: 800, fontSize: '16px',
-          boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+          boxShadow: '0 4px 12px rgba(58,74,83,0.3)'
         }}>
           I
         </div>
@@ -70,8 +70,8 @@ const Sidebar = () => {
               display: 'flex', alignItems: 'center', gap: '10px',
               padding: '10px 12px', borderRadius: '12px',
               textDecoration: 'none', fontSize: '14px', fontWeight: 500,
-              color: isActive ? (theme === 'dark' ? '#818cf8' : '#4338ca') : (theme === 'dark' ? '#94a3b8' : '#64748b'),
-              background: isActive ? (theme === 'dark' ? 'rgba(99,102,241,0.15)' : '#eef2ff') : 'transparent',
+              color: isActive ? (theme === 'dark' ? '#948f80' : '#2c3940') : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+              background: isActive ? (theme === 'dark' ? 'rgba(58,74,83,0.15)' : '#fbf9f6') : 'transparent',
               transition: 'all 0.15s ease'
             })}
           >
@@ -95,8 +95,8 @@ const Sidebar = () => {
                   display: 'flex', alignItems: 'center', gap: '10px',
                   padding: '10px 12px', borderRadius: '12px',
                   textDecoration: 'none', fontSize: '14px', fontWeight: 500,
-                  color: isActive ? (theme === 'dark' ? '#818cf8' : '#4338ca') : (theme === 'dark' ? '#94a3b8' : '#64748b'),
-                  background: isActive ? (theme === 'dark' ? 'rgba(99,102,241,0.15)' : '#eef2ff') : 'transparent',
+                  color: isActive ? (theme === 'dark' ? '#948f80' : '#2c3940') : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+                  background: isActive ? (theme === 'dark' ? 'rgba(58,74,83,0.15)' : '#fbf9f6') : 'transparent',
                   transition: 'all 0.15s ease'
                 })}
               >
@@ -115,8 +115,8 @@ const Sidebar = () => {
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '10px 12px', borderRadius: '12px',
             textDecoration: 'none', fontSize: '14px', fontWeight: 500,
-            color: isActive ? (theme === 'dark' ? '#818cf8' : '#4338ca') : (theme === 'dark' ? '#94a3b8' : '#64748b'),
-            background: isActive ? (theme === 'dark' ? 'rgba(99,102,241,0.15)' : '#eef2ff') : 'transparent',
+            color: isActive ? (theme === 'dark' ? '#948f80' : '#2c3940') : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+            background: isActive ? (theme === 'dark' ? 'rgba(58,74,83,0.15)' : '#fbf9f6') : 'transparent',
             marginBottom: '4px'
           })}
         >

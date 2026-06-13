@@ -67,15 +67,9 @@ const StaffPage = () => {
 
   return (
     <div className="animate-fade-in">
-      <div style={{ marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>Staff Management</h1>
-          <p style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '14px', marginTop: '4px' }}>{staff.length} team members</p>
-        </div>
-      </div>
       {createPortal(
         <div className="animate-fade-in" style={{ position: 'fixed', bottom: '32px', right: '32px', zIndex: 40, animationDelay: '0.1s' }}>
-          <button className="btn-primary" onClick={() => { setShowInvite(true); setInviteLink(''); }} style={{ padding: '14px 24px', fontSize: '15px', borderRadius: '100px', boxShadow: '0 8px 32px rgba(99,102,241,0.4)' }}>
+          <button className="btn-primary" onClick={() => { setShowInvite(true); setInviteLink(''); }} style={{ padding: '14px 24px', fontSize: '15px', borderRadius: '100px', boxShadow: '0 8px 32px rgba(58,74,83,0.4)' }}>
             <UserPlus size={20} /> Invite Staff
           </button>
         </div>,

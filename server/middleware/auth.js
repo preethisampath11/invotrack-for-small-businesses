@@ -54,3 +54,27 @@ export const verifyInventoryAccess = (req, res, next) => {
   }
   return res.status(403).json({ message: 'You do not have permission to modify inventory.' });
 };
+
+/**
+ * Higher-order middleware function to check for specific RBAC permissions.
+ * Admins automatically bypass this check.
+ * 
+ * Usage: router.delete('/:id', verifyToken, requirePermission('canDeletePayments'), deletePayment);
+ */
+export const requirePermission = (permissionFlag) => {
+  return (req, res, next) => {
+    // Admins have all permissions implicitly
+    if (req.user.role === 'admin') {
+      return next();
+    }
+    
+    // Check if the staff user has the specific boolean flag set to true
+    if (req.user[permissionFlag] === true) {
+      return next();
+    }
+    
+    return res.status(403).json({ 
+      message: `Access denied. You lack the '${permissionFlag}' permission.` 
+    });
+  };
+};

@@ -3,6 +3,9 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,11 +18,16 @@ import invoiceRoutes from './routes/invoiceRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import staffRoutes from './routes/staffRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { startRecurringInvoiceJob } from './jobs/recurringInvoiceJob.js';
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Re-run dotenv with explicit path to guarantee it finds the .env file
+dotenv.config({ path: path.join(__dirname, '.env'), override: true });
 
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -42,8 +50,19 @@ app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true
 }));
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); // Allow serving static images across domains
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static(uploadsDir));
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window`
+  message: { message: 'Too many requests from this IP, please try again later.' }
+});
+
+app.use('/api/', apiLimiter);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
@@ -56,6 +75,8 @@ app.use('/api/settings', settingsRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+app.use(errorHandler);
 
 io.on('connection', (socket) => {
   console.log(`Socket connected: ${socket.id}`);
@@ -87,6 +108,8 @@ mongoose.connect(MONGODB_URI)
     httpServer.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
+    // Start background jobs only after DB is ready
+    startRecurringInvoiceJob();
   })
   .catch((err) => {
     console.error('MongoDB connection error:', err);

@@ -28,6 +28,18 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  canCreateInvoices: {
+    type: Boolean,
+    default: false
+  },
+  canDeletePayments: {
+    type: Boolean,
+    default: false
+  },
+  canViewReports: {
+    type: Boolean,
+    default: false
+  },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
@@ -61,6 +73,14 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+userSchema.methods.toJSON = function() {
+  const user = this.toObject();
+  user.hasPassword = !!user.passwordHash;
+  delete user.passwordHash;
+  delete user.__v;
+  return user;
+};
 
 const User = mongoose.model('User', userSchema);
 export default User;

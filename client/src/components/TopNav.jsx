@@ -1,23 +1,20 @@
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { Moon, Sun } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const TopNav = () => {
+  const [imgError, setImgError] = useState(false);
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   return (
     <div style={{
-      background: theme === 'dark' ? '#1e293b' : '#f8fafc',
-      borderRadius: '24px',
       display: 'inline-flex',
       alignItems: 'center',
-      gap: '12px',
-      padding: '8px 16px 8px 12px',
-      boxShadow: theme === 'dark' ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(99,102,241,0.08)',
-      border: `1px solid ${theme === 'dark' ? '#334155' : 'transparent'}`,
+      gap: '16px',
       zIndex: 30
     }}>
       <button 
@@ -46,12 +43,21 @@ const TopNav = () => {
           alignItems: 'center', 
           gap: '10px', 
           cursor: 'pointer',
-          padding: '4px 8px',
-          borderRadius: '16px',
-          transition: 'background 0.2s'
+          padding: '4px 12px 4px 6px',
+          borderRadius: '24px',
+          transition: 'all 0.2s',
+          border: `1px solid ${theme === 'dark' ? '#475569' : '#e2e8f0'}`,
+          background: theme === 'dark' ? '#0f172a' : '#f8fafc',
+          boxShadow: theme === 'dark' ? '0 2px 8px rgba(0,0,0,0.2)' : '0 2px 8px rgba(58,74,83,0.06)'
         }}
-        onMouseOver={e => e.currentTarget.style.background = theme === 'dark' ? '#334155' : '#e2e8f0'}
-        onMouseOut={e => e.currentTarget.style.background = 'none'}
+        onMouseOver={e => {
+          e.currentTarget.style.borderColor = theme === 'dark' ? '#64748b' : '#cbd5e1';
+          e.currentTarget.style.boxShadow = theme === 'dark' ? '0 4px 12px rgba(0,0,0,0.4)' : '0 4px 12px rgba(58,74,83,0.12)';
+        }}
+        onMouseOut={e => {
+          e.currentTarget.style.borderColor = theme === 'dark' ? '#475569' : '#e2e8f0';
+          e.currentTarget.style.boxShadow = theme === 'dark' ? '0 2px 8px rgba(0,0,0,0.2)' : '0 2px 8px rgba(58,74,83,0.06)';
+        }}
       >
         <div style={{
           width: '32px', height: '32px', borderRadius: '10px',
@@ -60,8 +66,8 @@ const TopNav = () => {
           justifyContent: 'center', fontSize: '14px', fontWeight: 600,
           color: theme === 'dark' ? '#cbd5e1' : '#64748b', overflow: 'hidden'
         }}>
-          {user?.avatar ? (
-            <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {user?.avatar && !imgError ? (
+            <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={() => setImgError(true)} />
           ) : (
             user?.name?.charAt(0)?.toUpperCase()
           )}

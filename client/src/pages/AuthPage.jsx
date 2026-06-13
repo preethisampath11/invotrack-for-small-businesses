@@ -32,7 +32,9 @@ const GoogleLogo = () => (
 
 /* ─── Reusable labelled input ─────────────────────────────────────────── */
 const Field = ({ label, icon: Icon, type = 'text', name, value, onChange,
-  placeholder, required, minLength, suffix }) => (
+  placeholder, required, minLength, suffix }) => {
+  const { theme } = useTheme();
+  return (
   <div>
     <label style={{
       display: 'block', fontSize: '12px', fontWeight: 700,
@@ -62,8 +64,8 @@ const Field = ({ label, icon: Icon, type = 'text', name, value, onChange,
           fontFamily: 'inherit'
         }}
         onFocus={e => {
-          e.target.style.borderColor = '#6366f1';
-          e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.12)';
+          e.target.style.borderColor = '#3a4a53';
+          e.target.style.boxShadow = '0 0 0 3px rgba(58,74,83,0.12)';
         }}
         onBlur={e => {
           e.target.style.borderColor = theme === 'dark' ? '#334155' : '#e2e8f0';
@@ -73,10 +75,12 @@ const Field = ({ label, icon: Icon, type = 'text', name, value, onChange,
       {suffix}
     </div>
   </div>
-);
+)};
 
 /* ─── OR divider ──────────────────────────────────────────────────────── */
-const Divider = () => (
+const Divider = () => {
+  const { theme } = useTheme();
+  return (
   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '4px 0' }}>
     <div style={{ flex: 1, height: '1px', background: theme === 'dark' ? '#334155' : '#e2e8f0' }} />
     <span style={{ fontSize: '12px', fontWeight: 600, color: theme === 'dark' ? '#cbd5e1' : '#94a3b8', letterSpacing: '0.05em' }}>
@@ -84,7 +88,7 @@ const Divider = () => (
     </span>
     <div style={{ flex: 1, height: '1px', background: theme === 'dark' ? '#334155' : '#e2e8f0' }} />
   </div>
-);
+)};
 
 /* ════════════════════════════════════════════════════════════════════════ */
 const AuthPage = () => {
@@ -212,13 +216,13 @@ const AuthPage = () => {
   return (
     <div style={{
       minHeight: '100vh', display: 'flex',
-      background: theme === 'dark' ? '#0f172a' : '#f8faf9', fontFamily: "'Plus Jakarta Sans', sans-serif"
+      background: theme === 'dark' ? '#0f172a' : '#f8faf9', fontFamily: "'Nunito Sans', sans-serif"
     }}>
 
       {/* ══════════════ LEFT BRAND PANEL ══════════════ */}
       <div style={{
         width: '480px', minHeight: '100vh', flexShrink: 0,
-        background: 'linear-gradient(160deg, #0f172a 0%, #312e81 55%, #3730a3 100%)',
+        background: 'linear-gradient(160deg, #0f172a 0%, #2c3940 55%, #2c3940 100%)',
         display: 'flex', flexDirection: 'column',
         padding: '52px 48px', position: 'relative', overflow: 'hidden'
       }}>
@@ -226,22 +230,22 @@ const AuthPage = () => {
         <div style={{
           position: 'absolute', top: '-80px', right: '-80px',
           width: '320px', height: '320px', borderRadius: '50%',
-          background: 'rgba(99,102,241,0.08)', pointerEvents: 'none'
+          background: 'rgba(58,74,83,0.08)', pointerEvents: 'none'
         }} />
         <div style={{
           position: 'absolute', bottom: '-100px', left: '-60px',
           width: '280px', height: '280px', borderRadius: '50%',
-          background: 'rgba(99,102,241,0.06)', pointerEvents: 'none'
+          background: 'rgba(58,74,83,0.06)', pointerEvents: 'none'
         }} />
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '64px' }}>
           <div style={{
             width: '44px', height: '44px', borderRadius: '12px',
-            background: 'linear-gradient(135deg, #818cf8, #4f46e5)',
+            background: 'linear-gradient(135deg, #948f80, #2c3940)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: 900, fontSize: '20px', color: '#fff',
-            boxShadow: '0 4px 16px rgba(99,102,241,0.4)'
+            boxShadow: '0 4px 16px rgba(58,74,83,0.4)'
           }}>I</div>
           <span style={{ fontSize: '22px', fontWeight: 800, color: '#fff', letterSpacing: '-0.3px' }}>
             InvoTrack
@@ -252,11 +256,11 @@ const AuthPage = () => {
         <div style={{ flex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '6px',
-            background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
+            background: 'rgba(58,74,83,0.15)', border: '1px solid rgba(58,74,83,0.3)',
             borderRadius: '100px', padding: '4px 12px', marginBottom: '20px'
           }}>
-            <Zap size={12} color="#818cf8" />
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#818cf8', letterSpacing: '0.04em' }}>
+            <Zap size={12} color="#948f80" />
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#948f80', letterSpacing: '0.04em' }}>
               LIVE REAL-TIME SYNC
             </span>
           </div>
@@ -267,7 +271,7 @@ const AuthPage = () => {
           }}>
             Invoice smarter.<br />
             <span style={{
-              background: 'linear-gradient(90deg, #818cf8, #6366f1)',
+              background: 'linear-gradient(90deg, #948f80, #3a4a53)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
             }}>
               Grow faster.
@@ -293,10 +297,10 @@ const AuthPage = () => {
               >
                 <div style={{
                   width: '32px', height: '32px', borderRadius: '8px', flexShrink: 0,
-                  background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.2)',
+                  background: 'rgba(58,74,83,0.15)', border: '1px solid rgba(58,74,83,0.2)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
-                  <Icon size={15} color="#818cf8" />
+                  <Icon size={15} color="#948f80" />
                 </div>
                 <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>
                   {text}
@@ -309,7 +313,7 @@ const AuthPage = () => {
         {/* Trust strip */}
         <div style={{ marginTop: '48px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ShieldCheck size={14} color="#818cf8" />
+            <ShieldCheck size={14} color="#948f80" />
             <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
               JWT secured · Google OAuth · Role-based access · Real-time alerts
             </span>
@@ -339,22 +343,22 @@ const AuthPage = () => {
                 style={{
                   display: 'flex', alignItems: 'flex-start', gap: '12px',
                   padding: '14px 16px',
-                  background: 'linear-gradient(135deg, #eef2ff, #e0e7ff)',
+                  background: 'linear-gradient(135deg, #fbf9f6, #e4c5a0)',
                   border: '1.5px solid #a5b4fc', borderRadius: '14px', marginBottom: '24px'
                 }}
               >
                 <div style={{
                   width: '36px', height: '36px', borderRadius: '10px',
-                  background: '#6366f1', display: 'flex', alignItems: 'center',
+                  background: '#3a4a53', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', flexShrink: 0
                 }}>
                   <CheckCircle2 size={18} color="#fff" />
                 </div>
                 <div>
-                  <p style={{ fontSize: '13px', fontWeight: 700, color: '#4338ca', marginBottom: '2px' }}>
+                  <p style={{ fontSize: '13px', fontWeight: 700, color: '#2c3940', marginBottom: '2px' }}>
                     You've been invited! 🎉
                   </p>
-                  <p style={{ fontSize: '12px', color: '#6366f1', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '12px', color: '#3a4a53', lineHeight: 1.5 }}>
                     Create your staff account below. Your admin will activate it once you've registered.
                   </p>
                 </div>
@@ -369,7 +373,7 @@ const AuthPage = () => {
                 style={{
                   display: 'flex', alignItems: 'flex-start', gap: '12px',
                   padding: '14px 16px',
-                  background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
+                  background: 'linear-gradient(135deg, #fbf9f6, #f6d1a1)',
                   border: '1.5px solid #93c5fd', borderRadius: '14px', marginBottom: '24px'
                 }}
               >
@@ -401,13 +405,13 @@ const AuthPage = () => {
                   ? 'Set up your staff account'
                   : 'Create your business'}
             </h2>
-            <p style={{ fontSize: '14px', color: theme === 'dark' ? '#cbd5e1' : '#64748b' }}>
-              {tab === 'login'
-                ? 'Welcome back — enter your credentials to continue'
-                : isStaffInvite
+            {tab !== 'login' && (
+              <p style={{ fontSize: '14px', color: theme === 'dark' ? '#cbd5e1' : '#64748b' }}>
+                {isStaffInvite
                   ? 'Fill in your details to join the team'
                   : 'Start your 5-minute setup — no credit card required'}
-            </p>
+              </p>
+            )}
           </div>
 
           {/* ── Tab switcher (hidden for staff invite) ── */}
@@ -441,15 +445,15 @@ const AuthPage = () => {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '5px 12px', borderRadius: '100px',
-              background: isStaffInvite ? (theme === 'dark' ? 'rgba(99,102,241,0.1)' : '#eef2ff') : (theme === 'dark' ? '#1e293b' : '#f8fafc'),
-              border: `1.5px solid ${isStaffInvite ? (theme === 'dark' ? 'rgba(99,102,241,0.2)' : '#a5b4fc') : (theme === 'dark' ? '#334155' : theme === 'dark' ? '#334155' : '#e2e8f0')}`,
+              background: isStaffInvite ? (theme === 'dark' ? 'rgba(58,74,83,0.1)' : '#fbf9f6') : (theme === 'dark' ? '#1e293b' : '#f8fafc'),
+              border: `1.5px solid ${isStaffInvite ? (theme === 'dark' ? 'rgba(58,74,83,0.2)' : '#a5b4fc') : (theme === 'dark' ? '#334155' : theme === 'dark' ? '#334155' : '#e2e8f0')}`,
               fontSize: '12px', fontWeight: 700,
-              color: isStaffInvite ? '#6366f1' : theme === 'dark' ? '#cbd5e1' : '#475569',
+              color: isStaffInvite ? '#3a4a53' : theme === 'dark' ? '#cbd5e1' : '#475569',
               letterSpacing: '0.04em', textTransform: 'uppercase'
             }}>
               <div style={{
                 width: '6px', height: '6px', borderRadius: '50%',
-                background: isStaffInvite ? '#6366f1' : theme === 'dark' ? '#cbd5e1' : '#64748b'
+                background: isStaffInvite ? '#3a4a53' : theme === 'dark' ? '#cbd5e1' : '#64748b'
               }} />
               {isStaffInvite
                 ? 'Staff Registration'
@@ -579,13 +583,13 @@ const AuthPage = () => {
                   width: '100%', padding: '13px',
                   background: isGoogleBusy
                     ? '#a5b4fc'
-                    : 'linear-gradient(135deg, #818cf8, #4f46e5)',
+                    : 'linear-gradient(135deg, #948f80, #2c3940)',
                   color: '#fff', border: 'none', borderRadius: '12px',
                   fontSize: '15px', fontWeight: 700,
                   cursor: isGoogleBusy ? 'not-allowed' : 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                   marginTop: '2px',
-                  boxShadow: isGoogleBusy ? 'none' : '0 4px 14px rgba(99,102,241,0.3)',
+                  boxShadow: isGoogleBusy ? 'none' : '0 4px 14px rgba(58,74,83,0.3)',
                   transition: 'background 0.2s, box-shadow 0.2s',
                   fontFamily: 'inherit'
                 }}
@@ -621,7 +625,7 @@ const AuthPage = () => {
                 onClick={() => setTab(tab === 'login' ? 'register' : 'login')}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer',
-                  color: '#6366f1', fontWeight: 700, fontSize: '14px',
+                  color: '#3a4a53', fontWeight: 700, fontSize: '14px',
                   fontFamily: 'inherit', padding: 0
                 }}
               >
