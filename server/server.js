@@ -18,6 +18,7 @@ import invoiceRoutes from './routes/invoiceRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import staffRoutes from './routes/staffRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import gmailRoutes from './routes/gmailRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { startRecurringInvoiceJob } from './jobs/recurringInvoiceJob.js';
 
@@ -71,6 +72,7 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/gmail', gmailRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

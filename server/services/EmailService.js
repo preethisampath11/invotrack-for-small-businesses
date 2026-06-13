@@ -7,27 +7,51 @@ export const sendInvoiceEmail = async (invoice, company, pdfBuffer) => {
     throw new Error('Client does not have an email address');
   }
 
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+  let transporter;
+  let fromAddress;
+  let replyToAddress;
 
-  if (!gmailUser || !gmailPass) {
-    console.log(`[MOCK EMAIL] GMAIL_USER or GMAIL_APP_PASSWORD not set.`);
-    console.log(`[MOCK EMAIL] Would send invoice ${invoice.invoiceNumber} to ${recipientEmail}`);
-    return { id: 'mock-email-id' };
+  if (invoice.createdBy?.googleRefreshToken && invoice.createdBy?.connectedGmail && process.env.GOOGLE_CLIENT_SECRET) {
+    // NATIVE OAUTH2 SENDING
+    transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: invoice.createdBy.connectedGmail,
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        refreshToken: invoice.createdBy.googleRefreshToken,
+      }
+    });
+    fromAddress = `"${company.name} (${invoice.createdBy.name})" <${invoice.createdBy.connectedGmail}>`;
+    replyToAddress = invoice.createdBy.connectedGmail; // Native, so replies naturally go here, but good to be explicit
+  } else {
+    // FALLBACK TO GENERIC SYSTEM SMTP
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPass = process.env.GMAIL_APP_PASSWORD;
+
+    if (!gmailUser || !gmailPass) {
+      console.log(`[MOCK EMAIL] GMAIL_USER or GMAIL_APP_PASSWORD not set.`);
+      console.log(`[MOCK EMAIL] Would send invoice ${invoice.invoiceNumber} to ${recipientEmail}`);
+      return { id: 'mock-email-id' };
+    }
+
+    transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: gmailUser,
+        pass: gmailPass,
+      },
+    });
+    fromAddress = `"${company.name}" <${gmailUser}>`;
+    replyToAddress = invoice.createdBy?.email;
   }
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: gmailUser,
-      pass: gmailPass,
-    },
-  });
 
   const currencySymbol = company.settings?.currencySymbol || '$';
 
   const mailOptions = {
-    from: `"${company.name}" <${gmailUser}>`,
+    from: fromAddress,
+    replyTo: replyToAddress,
     to: recipientEmail,
     subject: `Invoice ${invoice.invoiceNumber} from ${company.name}`,
     html: `

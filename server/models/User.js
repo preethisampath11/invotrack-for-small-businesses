@@ -54,6 +54,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  googleRefreshToken: {
+    type: String,
+    default: null
+  },
+  connectedGmail: {
+    type: String,
+    default: null
+  },
   preferences: {
     emailOnPayment: { type: Boolean, default: true },
     emailWeeklySummary: { type: Boolean, default: true }

@@ -146,7 +146,8 @@ export const getDashboardStats = async (req, res, next) => {
 export const sendInvoiceEmail = async (req, res, next) => {
   try {
     const invoice = await Invoice.findOne({ _id: req.params.id, companyId: req.user.companyId })
-      .populate('clientId');
+      .populate('clientId')
+      .populate('createdBy', 'name email googleRefreshToken connectedGmail');
     if (!invoice) return res.status(404).json({ message: 'Invoice not found.' });
 
     const company = await Company.findById(req.user.companyId);

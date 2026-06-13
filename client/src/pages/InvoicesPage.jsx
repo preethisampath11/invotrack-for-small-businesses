@@ -14,6 +14,7 @@ const InvoicesPage = () => {
   const isAdmin = user?.role === 'admin';
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // ── UI state (not data) ────────────────────────────────────────────────────
   const [search, setSearch] = useState('');
