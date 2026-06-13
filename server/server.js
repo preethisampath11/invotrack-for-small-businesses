@@ -27,8 +27,8 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Re-run dotenv with explicit path to guarantee it finds the .env file
-dotenv.config({ path: path.join(__dirname, '.env'), override: true });
+// Load environment variables (without override so Render variables take precedence)
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -103,6 +103,9 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/invotrack';
+
+console.log(`[BOOT] Environment variables loaded. MONGODB_URI is ${process.env.MONGODB_URI ? 'SET' : 'MISSING'}`);
+console.log(`[BOOT] Target DB connection string starts with: ${MONGODB_URI.substring(0, 15)}...`);
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
