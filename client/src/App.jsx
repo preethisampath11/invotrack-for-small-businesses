@@ -37,6 +37,8 @@ const queryClient = new QueryClient({
   },
 });
 
+import { Toaster } from 'react-hot-toast';
+
 const AppRoutes = () => {
   return (
     <SocketProvider>
@@ -71,6 +73,13 @@ const App = () => {
         <ThemeProvider>
           <AuthProvider>
             <AppRoutes />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 3000,
+                style: { background: '#1e293b', color: '#f8fafc', borderRadius: '12px', padding: '12px 16px', fontSize: '14px' }
+              }}
+            />
           </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>

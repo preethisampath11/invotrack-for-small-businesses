@@ -38,9 +38,11 @@ if (!fs.existsSync(uploadsDir)) {
 const app = express();
 const httpServer = createServer(app);
 
+const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: clientUrl,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
 });
@@ -48,7 +50,7 @@ const io = new Server(httpServer, {
 app.set('io', io);
 
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: clientUrl,
   credentials: true
 }));
 app.use(helmet());
