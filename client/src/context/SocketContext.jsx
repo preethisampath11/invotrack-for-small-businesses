@@ -34,7 +34,10 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!user || !user.companyId) return;
 
-    const newSocket = io(window.location.origin, {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const socketUrl = apiUrl ? apiUrl.replace(/\/api$/, '') : window.location.origin;
+
+    const newSocket = io(socketUrl, {
       transports: ['websocket', 'polling'],
     });
 

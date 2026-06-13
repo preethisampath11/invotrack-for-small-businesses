@@ -10,8 +10,10 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('invotrack_token'));
   const [loading, setLoading] = useState(true);
 
+  const API_URL = import.meta.env.VITE_API_URL || '/api';
+
   const api = axios.create({
-    baseURL: '/api',
+    baseURL: API_URL,
     headers: token ? { Authorization: `Bearer ${token}` } : {}
   });
 
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          const res = await axios.post('/api/auth/refresh');
+          const res = await axios.post(`${API_URL}/auth/refresh`);
           const newToken = res.data.token;
           
           localStorage.setItem('invotrack_token', newToken);
@@ -94,7 +96,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    try { await axios.post('/api/auth/logout'); } catch (err) { console.error('Logout error', err); }
+    try { await axios.post(`${API_URL}/auth/logout`); } catch (err) { console.error('Logout error', err); }
     localStorage.removeItem('invotrack_token');
     setToken(null);
     setUser(null);
