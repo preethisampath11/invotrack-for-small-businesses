@@ -2,11 +2,11 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, FileText, Package, Users, UserCheck,
-  Settings, LogOut, User, CreditCard, Moon, Sun
+  Settings, LogOut, User, CreditCard, Moon, Sun, X
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -30,20 +30,29 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside style={{
-      width: '240px',
-      height: 'calc(100vh - 24px)',
+    <>
+    {/* Backdrop for mobile */}
+    {isOpen && (
+      <div 
+        onClick={() => setIsOpen(false)}
+        style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,0,0,0.5)' }} 
+      />
+    )}
+    <aside className={`sidebar-wrapper ${isOpen ? 'open' : ''}`} style={{
       background: theme === 'dark' ? '#1e293b' : 'var(--bg-color, #ffffff)',
       borderRadius: '20px',
       boxShadow: theme === 'dark' ? '0 8px 32px rgba(0,0,0,0.3)' : '0 8px 32px rgba(58,74,83,0.15)',
       padding: '24px 16px',
       display: 'flex',
       flexDirection: 'column',
-      position: 'fixed',
-      left: '12px',
-      top: '12px',
-      zIndex: 40
     }}>
+      <button 
+        className="mobile-menu-btn" 
+        onClick={() => setIsOpen(false)}
+        style={{ position: 'absolute', top: '16px', right: '16px' }}
+      >
+        <X size={20} />
+      </button>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '32px', paddingLeft: '8px' }}>
         <div style={{
           width: '36px', height: '36px', borderRadius: '12px',
@@ -139,6 +148,7 @@ const Sidebar = () => {
 
       </div>
     </aside>
+    </>
   );
 };
 

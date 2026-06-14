@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import Sidebar from './Sidebar';
 import TopNav from './TopNav';
 import { Toaster } from 'react-hot-toast';
@@ -7,6 +8,7 @@ import { useTheme } from '../context/ThemeContext';
 const Layout = () => {
   const { theme } = useTheme();
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -21,23 +23,16 @@ const Layout = () => {
     return '';
   };
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: theme === 'dark' ? '#0f172a' : '#f8fafc' }}>
-      <Sidebar />
-      <div style={{ flex: 1, marginLeft: '264px', padding: '24px 24px 24px 0', minHeight: '100vh', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <header className="main-container" style={{ 
-          height: '72px', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          padding: '0 24px',
-          flexShrink: 0
-        }}>
+    <div className="app-layout">
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <div className="main-content-wrapper">
+        <header className="main-container main-header">
           <h1 style={{ fontSize: '20px', fontWeight: 700, color: theme === 'dark' ? '#f8fafc' : '#0f172a', margin: 0 }}>
             {getPageTitle()}
           </h1>
-          <TopNav />
+          <TopNav toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
         </header>
-        <main className="main-container" style={{ flex: 1, padding: '32px', position: 'relative', overflowX: 'hidden' }}>
+        <main className="main-container main-content">
           <Outlet />
         </main>
       </div>

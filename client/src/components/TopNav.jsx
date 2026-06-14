@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const TopNav = () => {
+const TopNav = ({ toggleSidebar }) => {
   const [imgError, setImgError] = useState(false);
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -17,6 +17,13 @@ const TopNav = () => {
       gap: '16px',
       zIndex: 30
     }}>
+      <button 
+        className="mobile-menu-btn"
+        onClick={toggleSidebar}
+      >
+        <Menu size={20} />
+      </button>
+
       <button 
         onClick={toggleTheme} 
         style={{ 
