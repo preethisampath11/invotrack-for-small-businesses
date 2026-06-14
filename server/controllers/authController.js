@@ -262,7 +262,8 @@ export const updateProfile = async (req, res) => {
     }
 
     if (req.file) {
-      user.avatar = `/uploads/${req.file.filename}`;
+      const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      user.avatar = dataUri;
     }
 
     await user.save();

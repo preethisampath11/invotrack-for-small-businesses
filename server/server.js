@@ -59,9 +59,11 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static(uploadsDir));
 
+app.set('trust proxy', 1); // Trust first proxy (Render load balancer)
+
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window`
+  max: 500, // Limit each IP to 500 requests per `window`
   message: { message: 'Too many requests from this IP, please try again later.' }
 });
 

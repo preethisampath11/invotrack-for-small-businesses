@@ -100,9 +100,11 @@ export const uploadLogo = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded.' });
 
+    const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+
     const company = await Company.findByIdAndUpdate(
       req.user.companyId,
-      { logoUrl: `/uploads/${req.file.filename}` },
+      { logoUrl: dataUri },
       { new: true }
     );
 
